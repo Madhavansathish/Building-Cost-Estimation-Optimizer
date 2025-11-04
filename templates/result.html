@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Total Estimation</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+      background: linear-gradient(135deg, #0f1419 0%, #1a2332 100%);
+      min-height: 100vh;
+      color: #e0e0e0;
+      padding: 30px 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 18px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+      padding: 50px 45px;
+      border: 1px solid rgba(76, 175, 80, 0.2);
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 38px;
+      background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+
+    .info {
+      text-align: center;
+      font-size: 17px;
+      color: #999;
+      margin-bottom: 40px;
+      font-weight: 500;
+    }
+
+    .info span {
+      color: #1a2a3f;
+      font-weight: 700;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 22px;
+      margin-top: 30px;
+      margin-bottom: 40px;
+    }
+
+    .card {
+      background: linear-gradient(135deg, rgba(76, 175, 80, 0.05) 0%, rgba(76, 175, 80, 0.02) 100%);
+      border-radius: 14px;
+      border: 2px solid rgba(76, 175, 80, 0.2);
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      border-color: #4CAF50;
+      box-shadow: 0 12px 35px rgba(76, 175, 80, 0.2);
+      background: linear-gradient(135deg, rgba(76, 175, 80, 0.12) 0%, rgba(76, 175, 80, 0.05) 100%);
+    }
+
+    .card-icon img {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+      transition: transform 0.3s ease, filter 0.3s ease;
+    }
+
+    .card:hover img {
+      transform: scale(1.1);
+      filter: drop-shadow(0 4px 8px rgba(76, 175, 80, 0.3));
+    }
+
+    .card-text h3 {
+      font-size: 18px;
+      color: #1a2a3f;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .card-text p {
+      font-size: 20px;
+      color: #4CAF50;
+      font-weight: 700;
+    }
+
+    .total-box {
+      text-align: center;
+      background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+      color: white;
+      font-size: 32px;
+      font-weight: 700;
+      padding: 32px;
+      margin-top: 45px;
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(76, 175, 80, 0.3);
+    }
+
+    .total-label {
+      font-size: 18px;
+      opacity: 0.95;
+      margin-bottom: 8px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .total-amount {
+      font-size: 36px;
+      font-weight: 700;
+    }
+
+    .btn-group {
+      text-align: center;
+      margin-top: 35px;
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    button {
+      background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+      color: white;
+      border: none;
+      padding: 16px 32px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+      text-transform: uppercase;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(76, 175, 80, 0.4);
+    }
+
+    .new-calc-btn {
+      background: #f0f0f0;
+      color: #1a2a3f;
+      border: 2px solid #ddd;
+      box-shadow: none;
+    }
+
+    .new-calc-btn:hover {
+      background: #e8e8e8;
+      border-color: #999;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    form {
+      display: contents;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🏗️ Total Estimation</h1>
+    <p class="info">
+      📐 Area: <span id="areaFormatted">{{ area }}</span> sq.ft | 🛏️ BHK: <span>{{ bhk }}</span> | ✨ Quality: <span>{{ quality|title }}</span>
+    </p>
+
+    <div class="grid">
+      {% for k, v in cost_split.items() %}
+      <div class="card">
+        <div class="card-icon">
+          {% if "cement" in k.lower() or "brick" in k.lower() %}
+            <img src="{{ url_for('static', filename='images/bricks.svg') }}" alt="Cement & Bricks">
+          {% elif "steel" in k.lower() %}
+            <img src="{{ url_for('static', filename='images/steel.png') }}" alt="Steel">
+          {% elif "labor" in k.lower() %}
+            <img src="{{ url_for('static', filename='images/labor.svg') }}" alt="Labor">
+          {% elif "floor" in k.lower() %}
+            <img src="{{ url_for('static', filename='images/flooring.svg') }}" alt="Flooring">
+          {% elif "plumb" in k.lower() or "elect" in k.lower() %}
+            <img src="{{ url_for('static', filename='images/plumbing.svg') }}" alt="Plumbing">
+          {% elif "contractor" in k.lower() %}
+            <img src="{{ url_for('static', filename='images/contractor.svg') }}" alt="Contractor">
+          {% else %}
+            <img src="{{ url_for('static', filename='images/misc.png') }}" alt="Miscellaneous">
+          {% endif %}
+        </div>
+        <div class="card-text">
+          <h3>{{ k }}</h3>
+          <p id="cost_{{ loop.index0 }}">₹{{ v }}</p>
+          <input type="hidden" name="{{ k }}" value="{{ v }}">
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="total-box">
+      <div class="total-label">💰 Total Estimated Cost</div>
+      <div class="total-amount" id="totalFormatted">₹{{ total }}</div>
+    </div>
+
+    <div class="btn-group">
+      <form method="POST" action="/optimize">
+        {% for k, v in cost_split.items() %}
+          <input type="hidden" name="{{ k }}" value="{{ v }}">
+        {% endfor %}
+        <input type="hidden" name="total" value="{{ total }}">
+        <button type="submit">🔧 Optimize Costs</button>
+      </form>
+      <button class="new-calc-btn"><a href="/">🔁 New Calculation</a></button>
+    </div>
+  </div>
+
+  <script>
+    function formatIndianNumber(num) {
+      const parts = num.toString().split('.');
+      const integerPart = parts[0];
+      const decimalPart = parts[1];
+      let reversed = integerPart.split('').reverse().join('');
+      let formatted = '';
+      for (let i = 0; i < reversed.length; i++) {
+        if (i === 3 || (i > 3 && (i - 3) % 2 === 0)) {
+          formatted += ',';
+        }
+        formatted += reversed[i];
+      }
+      formatted = formatted.split('').reverse().join('');
+      if (decimalPart) {
+        formatted += '.' + decimalPart;
+      }
+      return formatted;
+    }
+
+    const totalElement = document.getElementById('totalFormatted');
+    const totalText = totalElement.textContent.replace('₹', '').trim();
+    totalElement.textContent = '₹' + formatIndianNumber(parseFloat(totalText));
+
+    const areaElement = document.getElementById('areaFormatted');
+    const areaText = areaElement.textContent.trim();
+    areaElement.textContent = formatIndianNumber(parseFloat(areaText));
+
+    document.querySelectorAll('.card-text p').forEach((element) => {
+      const costText = element.textContent.replace('₹', '').trim();
+      const numValue = parseFloat(costText);
+      element.textContent = '₹' + formatIndianNumber(numValue);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Optimized Cost Analysis</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+      background: linear-gradient(135deg, #0f1419 0%, #1a2332 100%);
+      min-height: 100vh;
+      padding: 20px;
+      color: #333;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 850px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+      padding: 45px;
+      animation: slideUp 0.5s ease;
+      border: 1px solid rgba(76, 175, 80, 0.2);
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h1 {
+      color: #1a2a3f;
+      font-size: 34px;
+      margin-bottom: 28px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .savings-card {
+      background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 100%);
+      border: 2px solid #4CAF50;
+      border-radius: 14px;
+      padding: 28px;
+      margin-bottom: 32px;
+      text-align: center;
+    }
+
+    .savings-label {
+      font-size: 18px;
+      color: #2e7d32;
+      font-weight: 700;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .savings-amount {
+      font-size: 40px;
+      color: #1b5e20;
+      font-weight: 700;
+    }
+
+    .cost-comparison {
+      background: #fafbfc;
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 32px;
+      display: flex;
+      justify-content: space-around;
+      text-align: center;
+      border: 1px solid #e6e9ee;
+    }
+
+    .cost-item {
+      flex: 1;
+    }
+
+    .cost-label {
+      font-size: 15px;
+      color: #999;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      letter-spacing: 0.8px;
+    }
+
+    .cost-amount {
+      font-size: 28px;
+      font-weight: 700;
+      color: #1a2a3f;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 32px 0;
+      background: #fafbfc;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    th {
+      background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+      color: white;
+      padding: 18px;
+      text-align: left;
+      font-weight: 700;
+      font-size: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    td {
+      padding: 18px;
+      border-bottom: 1px solid #e6e9ee;
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    td:nth-child(1) {
+      color: #1a2a3f;
+      font-weight: 700;
+    }
+
+    td:nth-child(2) {
+      color: #666;
+      font-weight: 600;
+    }
+
+    td:nth-child(3),
+    td:nth-child(4) {
+      text-align: right;
+      font-weight: 700;
+      color: #4CAF50;
+      font-size: 17px;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover {
+      background: #f0f4ff;
+      transition: background 0.2s ease;
+    }
+
+    .button-group {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 32px;
+    }
+
+    a.button {
+      padding: 17px 22px;
+      border: none;
+      border-radius: 10px;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+    }
+
+    .calc-btn {
+      background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+      color: white;
+      box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+    }
+
+    .calc-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(76, 175, 80, 0.4);
+    }
+
+    .home-btn {
+      background: #f0f0f0;
+      color: #1a2a3f;
+      border: 2px solid #ddd;
+    }
+
+    .home-btn:hover {
+      background: #e8e8e8;
+      border-color: #999;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 25px 20px;
+      }
+
+      h1 {
+        font-size: 28px;
+        margin-bottom: 22px;
+      }
+
+      .savings-card {
+        padding: 22px;
+        margin-bottom: 24px;
+      }
+
+      .savings-label {
+        font-size: 16px;
+      }
+
+      .savings-amount {
+        font-size: 32px;
+      }
+
+      .cost-comparison {
+        flex-direction: column;
+        gap: 16px;
+        padding: 18px;
+      }
+
+      .cost-label {
+        font-size: 14px;
+      }
+
+      .cost-amount {
+        font-size: 24px;
+      }
+
+      td,
+      th {
+        padding: 14px;
+        font-size: 15px;
+      }
+
+      td:nth-child(3),
+      td:nth-child(4) {
+        font-size: 16px;
+      }
+
+      a.button {
+        padding: 15px;
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>🌱 Optimized Cost Analysis</h1>
+  
+  <div class="savings-card">
+    <div class="savings-label">Total Savings</div>
+    <div class="savings-amount" id="savingsFormatted">₹{{ savings }}</div>
+  </div>
+
+  <div class="cost-comparison">
+    <div class="cost-item">
+      <div class="cost-label">Original Cost</div>
+      <div class="cost-amount" id="originalFormatted">₹0</div>
+    </div>
+    <div class="cost-item">
+      <div class="cost-label">Optimized Cost</div>
+      <div class="cost-amount" id="optimizedFormatted">₹{{ optimized_total }}</div>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Component</th>
+        <th>Alternative</th>
+        <th>Original Cost (₹)</th>
+        <th>Optimized Cost (₹)</th>
+      </tr>
+    </thead>
+   <tbody>
+  {% for k, (alt, new_cost) in optimized.items() %}
+  <tr>
+    <td>{{ k }}</td>
+    <td>{{ alt }}</td>
+    <td>₹{{ original[k] | round(2) }}</td>
+    <td>₹{{ new_cost }}</td>
+  </tr>
+  {% endfor %}
+</tbody>
+  </table>
+
+  <div class="button-group">
+    <a href="/" class="button calc-btn">🔄 New Calculation</a>
+    <a href="/" class="button home-btn">🏠 Back to Home</a>
+  </div>
+</div>
+
+<script>
+  // Indian number formatting function
+  function formatIndianNumber(num) {
+    const numStr = num.toString();
+    const parts = numStr.split('.');
+    const integerPart = parts[0];
+    const decimalPart = parts[1];
+    
+    let reversed = integerPart.split('').reverse().join('');
+    let formatted = '';
+    
+    for (let i = 0; i < reversed.length; i++) {
+      if (i === 3 || (i > 3 && (i - 3) % 2 === 0)) {
+        formatted += ',';
+      }
+      formatted += reversed[i];
+    }
+    
+    formatted = formatted.split('').reverse().join('');
+    
+    if (decimalPart) {
+      formatted += '.' + decimalPart;
+    }
+    
+    return formatted;
+  }
+  
+  // Get all original costs from hidden data
+  const optimizedCosts = [];
+  let totalOptimized = 0;
+  
+  document.querySelectorAll('.opt-cost').forEach((cell, index) => {
+    const costText = cell.textContent.replace('₹', '').trim();
+    const cost = parseFloat(costText);
+    optimizedCosts.push(cost);
+    totalOptimized += cost;
+  });
+  
+  // Format savings
+  const savingsElement = document.getElementById('savingsFormatted');
+  const savingsText = savingsElement.textContent.replace('₹', '').trim();
+  const savingsAmount = parseFloat(savingsText);
+  savingsElement.textContent = '₹' + formatIndianNumber(savingsAmount);
+  
+  // Format optimized total
+  const optimizedElement = document.getElementById('optimizedFormatted');
+  const optimizedText = optimizedElement.textContent.replace('₹', '').trim();
+  const optimizedTotal = parseFloat(optimizedText);
+  optimizedElement.textContent = '₹' + formatIndianNumber(optimizedTotal);
+  
+  // Calculate and format original total
+  const originalTotal = optimizedTotal + savingsAmount;
+  document.getElementById('originalFormatted').textContent = '₹' + formatIndianNumber(originalTotal);
+  
+  // Format each row
+  document.querySelectorAll('table tbody tr').forEach((row, index) => {
+    const optimizedCost = parseFloat(row.querySelector(`#opt_${index}`).textContent.replace('₹', '').trim());
+    
+    // Calculate proportional original cost
+    const proportionalSavings = (savingsAmount / optimizedCosts.length);
+    const originalCost = optimizedCost + proportionalSavings;
+    
+    row.querySelector(`#orig_${index}`).textContent = '₹' + formatIndianNumber(originalCost);
+    row.querySelector(`#opt_${index}`).textContent = '₹' + formatIndianNumber(optimizedCost);
+  });
+</script>
+</body>
+</html>
