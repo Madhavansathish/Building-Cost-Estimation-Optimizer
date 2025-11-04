@@ -9,8 +9,7 @@ It helps builders, homeowners, and engineers estimate and optimize project costs
 
 ✅ **Accurate Cost Estimation** – Calculates detailed construction costs based on area, quality, and BHK.  
 ✅ **AI Optimization Engine** – Suggests cost-efficient and eco-friendly material substitutions.  
-✅ **Interactive Results Dashboard** – Displays detailed material-wise cost breakdowns with visuals.  
-✅ **PDF Report Generator (optional)** – Export estimation results for clients or documentation.  
+✅ **Interactive Results Dashboard** – Displays detailed material-wise cost breakdowns with visuals.   
 ✅ **Clean UI** – Fully responsive and visually appealing HTML/CSS front-end.  
 
 ---
